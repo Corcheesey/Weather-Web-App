@@ -1,4 +1,4 @@
-.parent-container {
+.parent-div {
   position: fixed;
   inset: 0px;
   width: 12rem;
@@ -8,25 +8,15 @@
   margin: auto;
 }
 
-.input-container {
+.input-div {
   display: flex;
 }
 
-.weather-container {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
+#current-conditions-div {
 }
 
-.hourly-container {
-  border: 2px solid black;
-  border-radius: 12px;
-  text-align: center;
+#hourly-conditions-div {
 }
 
-.daily-parent {
-  border: 2px solid black;
-  border-radius: 12px;
-  margin-top: 10px;
-  text-align: center;
+#daily-conditions-div {
 }
