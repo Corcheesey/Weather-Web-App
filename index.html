@@ -6,6 +6,31 @@
     <title>Weather App</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <div class="parent-container">
+      <div class="input-container">
+        <div>
+          <label for="cityInput">Provide your location info.</label>
+          <input type="text" placeholder="City, State, Country" id="location" />
+        </div>
+        <button type="button" onclick="fetchWeatherData()">
+          Fetch Weather
+        </button>
+      </div>
+      <div class="weather-container">
+        <div class="hourly-container">
+          <p id="hourly-details"></p>
+        </div>
+        <div class="daily-parent">
+          <div class="daily-container">
+            <p id="today-details"></p>
+          </div>
+          <div class="daily-container">
+            <p id="tomorrow-details"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
   <script src="main.js"></script>
 </html>

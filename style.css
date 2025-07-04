@@ -1,0 +1,32 @@
+.parent-container {
+  position: fixed;
+  inset: 0px;
+  width: 12rem;
+  height: 16rem;
+  max-width: 100vw;
+  max-height: 100dvh;
+  margin: auto;
+}
+
+.input-container {
+  display: flex;
+}
+
+.weather-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.hourly-container {
+  border: 2px solid black;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.daily-parent {
+  border: 2px solid black;
+  border-radius: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
