@@ -7,24 +7,35 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="parent-div">
+    <header>
+      <h1>Search Local and National Weather</h1>
+    </header>
+    <div class="weather-div">
       <!--User Input-->
-      <div class="input-div">
-        <div>
-          <label for="location">Provide your location info.</label>
-          <input type="text" placeholder="City, State, Country" id="location" />
-        </div>
-        <button type="button" onclick="fetchWeatherData()">
-          Fetch Weather
-        </button>
-      </div>
+      <input
+        type="text"
+        placeholder="City, State, Country"
+        id="location-input"
+        size="20"
+        autocomplete="off"
+      />
+      <button type="button" onclick="fetchWeatherData()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
       <!--Current Conditions-->
-      <div id="current-conditions-div"></div>
+      <div id="current-forecast-parent"></div>
       <!--Hourly Forecast-->
-      <div id="hourly-forecast-div"></div>
+      <div id="hourly-forecast-parent">
+        <div id="hourly-forecast-header"></div>
+        <div id="hourly-forecast-data"></div>
+      </div>
       <!--10-Day Forecast-->
       <div id="daily-forecast-div"></div>
     </div>
   </body>
   <script src="main.js"></script>
+  <script
+    src="https://kit.fontawesome.com/385a5043e1.js"
+    crossorigin="anonymous"
+  ></script>
 </html>

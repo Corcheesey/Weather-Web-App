@@ -1,67 +1,104 @@
+const locationInput = document.getElementById("location-input");
+const key = "HY7CDFGCMZD8HYD2K3PGJX8VQ";
+
+// Current Forecast Data Elements
+const currentForecastParent = document.getElementById(
+  "current-forecast-parent"
+);
+const currLocation = document.createElement("h1");
+const currConditions = document.createElement("h3");
+const currTemp = document.createElement("p");
+currTemp.style.fontSize = "70px";
+currTemp.style.fontWeight = "bolder";
+const currRealFeel = document.createElement("p");
+const currTempMaxMin = document.createElement("p");
+currentForecastParent.append(
+  currLocation,
+  currConditions,
+  currTemp,
+  currRealFeel,
+  currTempMaxMin
+);
+
+// Hourly Forecast Data Elements
+const hourlyForecastParent = document.getElementById("hourly-forecast-parent");
+const hourlyForecastHeader = document.getElementById("hourly-forecast-header");
+const hourlyForecastData = document.getElementById("hourly-forecast-data");
+hourlyForecastParent.append(hourlyForecastHeader, hourlyForecastData);
+
 async function fetchWeatherData() {
   try {
-    const key = "HY7CDFGCMZD8HYD2K3PGJX8VQ";
-    const location = document.getElementById("location").value;
-    const currentConditionsDiv = document.getElementById(
-      "current-conditions-div"
-    );
-    const hourlyForecastDiv = document.getElementById("hourly-forecast-div");
-
     const response = await fetch(
-      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${key}&iconSet=icons1`
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationInput.value}?key=${key}&iconSet=icons1`
     );
     const data = await response.json();
     console.log(data);
 
     // Render and format current weather data
-    const currentData = document.createElement("p");
-    currentData.innerHTML =
-      data.currentConditions.conditions +
-      "<br></br>" +
-      "Temp: " +
-      data.currentConditions.temp +
-      "F" +
-      "<br></br>" +
-      "Feels like: " +
-      data.currentConditions.feelslike +
-      "F" +
-      "<br></br>" +
-      "HIGH: " +
+    currLocation.innerHTML = data.resolvedAddress;
+    currConditions.innerHTML = data.currentConditions.conditions;
+    currTemp.innerHTML = data.currentConditions.temp + "&deg;";
+    currRealFeel.innerHTML =
+      "Feels like " + data.currentConditions.feelslike + "&deg;";
+    currTempMaxMin.innerHTML =
+      "High " +
       data.days[0].tempmax +
-      "F" +
-      " LOW: " +
+      "&deg; &#183; Low " +
       data.days[0].tempmin +
-      "F" +
-      "<br></br>" +
-      "Chance of rain: " +
-      data.currentConditions.precipprob +
-      "%";
-    currentConditionsDiv.appendChild(currentData);
+      "&deg;";
 
-    // Loop through each other of the day
-    data.days[0].hours.forEach((hour) => {
+    // Loop through each hour of the day
+    data.days[0].hours.forEach((el) => {
       // If hour is less than 12, set to AM, else, set to PM.
+      let hour = parseInt(el.datetime.substring(0, 2));
       let meridiem;
-      if (parseInt(hour.datetime.substring(0, 2)) <= 11) {
+      if (hour <= 11) {
         meridiem = "AM";
       } else {
         meridiem = "PM";
       }
 
-      // Render and format only future hours of the day
-      if (data.currentConditions.datetimeEpoch < hour.datetimeEpoch) {
-        const hourlyData = document.createElement("p");
+      // Loop through future hours of the day
+      if (data.currentConditions.datetimeEpoch < el.datetimeEpoch) {
+        const hourlyDiv = document.createElement("div");
+        const hourlyTemp = document.createElement("p");
         const hourlyIcon = document.createElement("img");
-        hourlyData.innerHTML =
-          hour.datetime.substring(0, 2) + meridiem + " " + hour.temp;
-        hourlyForecastDiv.appendChild(hourlyData);
-        hourlyForecastDiv.appendChild(hourlyIcon);
+        const hourlyHour = document.createElement("p");
+
+        hourlyForecastParent.style.display = "flex";
+        hourlyForecastHeader.innerHTML =
+          '<i class="fa-regular fa-clock"></i>' + " Hourly forecast";
+        hourlyDiv.id = "hourly-div";
+        hourlyIcon.src = `/icons/${el.icon}.svg`;
+        hourlyIcon.alt = el.icon;
+        // If the hour is 1pm or greater, subtract 12 from the hour to change to 12 hour clock format.
+        if (hour >= 13) {
+          hour -= 12;
+          hourlyTemp.innerHTML = el.temp + "&deg;";
+          hourlyHour.innerHTML = hour + meridiem;
+        } else {
+          hourlyTemp.innerHTML = el.temp + "&deg;";
+          hourlyHour.innerHTML = hour + meridiem;
+        }
+
+        hourlyDiv.append(hourlyTemp, hourlyIcon, hourlyHour);
+        hourlyForecastData.appendChild(hourlyDiv);
       }
     });
+
+    locationInput.value = "";
   } catch (error) {
     console.error("Could not fetch resources:", error);
   }
 }
+
+// If user presses the ENTER key, fetch the weather.
+locationInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    fetchWeatherData();
+    event.preventDefault();
+  }
+});
 
 // Display the current forcast as well as the forecast for the rest of the day, per hour.
 
