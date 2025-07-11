@@ -6,10 +6,10 @@ const currentForecastParent = document.getElementById(
   "current-forecast-parent"
 );
 const currLocation = document.createElement("h1");
-const currConditions = document.createElement("h3");
+const currConditions = document.createElement("h2");
 const currTemp = document.createElement("p");
 currTemp.style.fontSize = "70px";
-currTemp.style.fontWeight = "bolder";
+
 const currRealFeel = document.createElement("p");
 const currTempMaxMin = document.createElement("p");
 currentForecastParent.append(
@@ -26,6 +26,12 @@ const hourlyForecastHeader = document.getElementById("hourly-forecast-header");
 const hourlyForecastData = document.getElementById("hourly-forecast-data");
 hourlyForecastParent.append(hourlyForecastHeader, hourlyForecastData);
 
+// Daily Forecast Data Elements
+const dailyForecastParent = document.getElementById("daily-forecast-parent");
+const dailyForecastHeader = document.getElementById("daily-forecast-header");
+const dailyForecastData = document.getElementById("daily-forecast-data");
+dailyForecastParent.append(dailyForecastHeader, dailyForecastData);
+
 async function fetchWeatherData() {
   try {
     const response = await fetch(
@@ -34,19 +40,23 @@ async function fetchWeatherData() {
     const data = await response.json();
     console.log(data);
 
+    // Clears existing elements
+    hourlyForecastData.innerHTML = "";
+
     // Render and format current weather data
     currLocation.innerHTML = data.resolvedAddress;
     currConditions.innerHTML = data.currentConditions.conditions;
-    currTemp.innerHTML = data.currentConditions.temp + "&deg;";
+    currTemp.innerHTML = parseInt(data.currentConditions.temp) + "&deg;";
     currRealFeel.innerHTML =
-      "Feels like " + data.currentConditions.feelslike + "&deg;";
+      "Feels like " + parseInt(data.currentConditions.feelslike) + "&deg;";
     currTempMaxMin.innerHTML =
       "High " +
-      data.days[0].tempmax +
+      parseInt(data.days[0].tempmax) +
       "&deg; &#183; Low " +
-      data.days[0].tempmin +
+      parseInt(data.days[0].tempmin) +
       "&deg;";
 
+    // Render and format hourly forecast data.
     // Loop through each hour of the day
     data.days[0].hours.forEach((el) => {
       // If hour is less than 12, set to AM, else, set to PM.
@@ -74,16 +84,62 @@ async function fetchWeatherData() {
         // If the hour is 1pm or greater, subtract 12 from the hour to change to 12 hour clock format.
         if (hour >= 13) {
           hour -= 12;
-          hourlyTemp.innerHTML = el.temp + "&deg;";
+          hourlyTemp.innerHTML = parseInt(el.temp) + "&deg;";
           hourlyHour.innerHTML = hour + meridiem;
         } else {
-          hourlyTemp.innerHTML = el.temp + "&deg;";
+          hourlyTemp.innerHTML = parseInt(el.temp) + "&deg;";
           hourlyHour.innerHTML = hour + meridiem;
         }
 
-        hourlyDiv.append(hourlyTemp, hourlyIcon, hourlyHour);
+        if (hourlyTemp === null) {
+          hourlyTemp.innerHTML =
+            "There are no more hours in the day to display.";
+        }
+
+        hourlyDiv.append(hourlyTemp, hourlyIcon);
+        if (el.precipprob > 0) {
+          const rainChance = document.createElement("p");
+          rainChance.innerHTML = parseInt(el.precipprob) + "%";
+          rainChance.style.color = "#95b4e3";
+          hourlyDiv.appendChild(rainChance);
+        }
+        hourlyDiv.append(hourlyHour);
         hourlyForecastData.appendChild(hourlyDiv);
       }
+    });
+
+    // Render and format daily forecast data.
+    // Loop through each day of the future 10 days.
+    data.days.forEach((day) => {
+      const monthNum = parseInt(day.datetime.substring(5, 7));
+      const dayNum = parseInt(day.datetime.substring(8, 10));
+
+      const dailyDiv = document.createElement("div");
+      const dailyTempHigh = document.createElement("p");
+      dailyTempHigh.id = "daily-temp-high";
+      const dailyTempLow = document.createElement("p");
+      dailyTempLow.id = "daily-temp-low";
+      const dailyIcon = document.createElement("img");
+      const monthDay = document.createElement("p");
+
+      dailyForecastParent.style.display = "flex";
+      dailyForecastHeader.innerHTML =
+        '<i class="fa-regular fa-calendar"></i>' + " 14-day forecast";
+      dailyDiv.id = "daily-div";
+      dailyTempHigh.innerHTML = parseInt(day.tempmax) + "&deg;";
+      dailyTempLow.innerHTML = parseInt(day.tempmin) + "&deg;";
+      dailyIcon.src = `/icons/${day.icon}.svg`;
+      monthDay.innerHTML = monthNum + "/" + dayNum;
+
+      dailyDiv.append(dailyTempHigh, dailyTempLow, dailyIcon);
+      if (day.precipprob > 0) {
+        const rainChance = document.createElement("p");
+        rainChance.innerHTML = parseInt(day.precipprob) + "%";
+        rainChance.style.color = "#95b4e3";
+        dailyDiv.appendChild(rainChance);
+      }
+      dailyDiv.appendChild(monthDay);
+      dailyForecastData.appendChild(dailyDiv);
     });
 
     locationInput.value = "";
