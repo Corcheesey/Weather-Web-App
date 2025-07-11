@@ -81,7 +81,7 @@ async function fetchWeatherData() {
         hourlyForecastHeader.innerHTML =
           '<i class="fa-regular fa-clock"></i>' + " Hourly forecast";
         hourlyDiv.id = "hourly-div";
-        hourlyIcon.src = `/icons/${el.icon}.svg`;
+        hourlyIcon.src = `Weather-Web-App/icons/${el.icon}.svg`;
         hourlyIcon.alt = el.icon;
         // If the hour is 1pm or greater, subtract 12 from the hour to change to 12 hour clock format.
         if (hour >= 13) {
@@ -134,7 +134,7 @@ async function fetchWeatherData() {
         hourlyForecastHeader.innerHTML =
           '<i class="fa-regular fa-clock"></i>' + " Hourly forecast";
         hourlyDiv.id = "hourly-div";
-        hourlyIcon.src = `/icons/${el.icon}.svg`;
+        hourlyIcon.src = `Weather-Web-App/icons/${el.icon}.svg`;
         hourlyIcon.alt = el.icon;
         // If the hour is 1pm or greater, subtract 12 from the hour to change to 12 hour clock format.
         if (hour >= 13) {
@@ -187,7 +187,7 @@ async function fetchWeatherData() {
       dailyDiv.id = "daily-div";
       dailyTempHigh.innerHTML = parseInt(day.tempmax) + "&deg;";
       dailyTempLow.innerHTML = parseInt(day.tempmin) + "&deg;";
-      dailyIcon.src = `/icons/${day.icon}.svg`;
+      dailyIcon.src = `Weather-Web-App/icons/${day.icon}.svg`;
       monthDay.innerHTML = monthNum + "/" + dayNum;
 
       dailyDiv.append(dailyTempHigh, dailyTempLow, dailyIcon);
