@@ -51,7 +51,6 @@ async function fetchWeatherData() {
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationInput.value}?key=${key}&iconSet=icons1`
     );
     const data = await response.json();
-    console.log(data);
 
     // Clears existing elements
     hourlyForecastData.innerHTML = "";
