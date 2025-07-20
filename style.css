@@ -332,14 +332,14 @@ button {
   }
 
   #hourly-forecast-parent {
-    height: 250px;
+    height: 225px;
     width: 300px;
     font-size: 14px;
     margin-bottom: 20px;
   }
 
   #daily-forecast-parent {
-    height: 250px;
+    height: 225px;
     width: 300px;
     font-size: 14px;
     margin-bottom: 20px;
