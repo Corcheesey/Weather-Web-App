@@ -8,9 +8,6 @@
   </head>
   <body>
     <header>
-      <h1>Search Local and National Weather</h1>
-    </header>
-    <div class="weather-div">
       <!--User Input-->
       <input
         type="text"
@@ -22,8 +19,15 @@
       <button type="button" onclick="fetchWeatherData()">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
+    </header>
+    <div class="weather-div">
       <!--Current Conditions-->
       <div id="current-forecast-parent"></div>
+      <!--Map Location-->
+      <div id="additional-info-parent">
+        <div id="additional-info-header"></div>
+        <div id="additional-info-data"></div>
+      </div>
       <!--Hourly Forecast-->
       <div id="hourly-forecast-parent">
         <div id="hourly-forecast-header"></div>

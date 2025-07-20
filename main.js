@@ -7,6 +7,7 @@ const currentForecastParent = document.getElementById(
 );
 const currLocation = document.createElement("h1");
 const currConditions = document.createElement("h2");
+const currIcon = document.createElement("img");
 const currTemp = document.createElement("p");
 currTemp.style.fontSize = "40px";
 const currRealFeel = document.createElement("p");
@@ -14,10 +15,21 @@ const currTempMaxMin = document.createElement("p");
 currentForecastParent.append(
   currLocation,
   currConditions,
+  currIcon,
   currTemp,
   currRealFeel,
   currTempMaxMin
 );
+
+// Additional Forecast Info
+const additionalInfoParent = document.getElementById("additional-info-parent");
+const additionalInfoHeader = document.getElementById("additional-info-header");
+const additionalInfoData = document.getElementById("additional-info-data");
+const windSpeed = document.createElement("p");
+const UVIndex = document.createElement("p");
+const humidity = document.createElement("p");
+const snowChance = document.createElement("p");
+additionalInfoParent.append(additionalInfoHeader, additionalInfoData);
 
 // Hourly Forecast Data Elements
 const hourlyForecastParent = document.getElementById("hourly-forecast-parent");
@@ -48,6 +60,7 @@ async function fetchWeatherData() {
     // Render and format current weather data
     currLocation.innerHTML = data.resolvedAddress;
     currConditions.innerHTML = data.currentConditions.conditions;
+    currIcon.src = `icons/${data.currentConditions.icon}.svg`;
     currTemp.innerHTML = parseInt(data.currentConditions.temp) + "&deg;";
     currRealFeel.innerHTML =
       "Feels like " + parseInt(data.currentConditions.feelslike) + "&deg;";
@@ -96,13 +109,13 @@ async function fetchWeatherData() {
         hourlyDiv.append(hourlyTemp, hourlyIcon);
         if (el.precipprob > 0) {
           const rainChance = document.createElement("p");
-          rainChance.innerHTML = parseInt(el.precipprob) + "%";
-          rainChance.style.color = "#95b4e3";
+          rainChance.innerHTML = parseInt(round5(el.precipprob)) + "%";
+          rainChance.style.color = "#ffffff";
           hourlyDiv.appendChild(rainChance);
         } else {
           const rainChance = document.createElement("p");
-          rainChance.innerHTML = parseInt(el.precipprob) + "%";
-          rainChance.style.color = "#95b4e3";
+          rainChance.innerHTML = parseInt(round5(el.precipprob)) + "%";
+          rainChance.style.color = "#ffffff";
           hourlyDiv.appendChild(rainChance);
         }
         hourlyDiv.append(hourlyHour);
@@ -152,13 +165,13 @@ async function fetchWeatherData() {
         hourlyDiv.append(hourlyTemp, hourlyIcon);
         if (el.precipprob > 0) {
           const rainChance = document.createElement("p");
-          rainChance.innerHTML = parseInt(el.precipprob) + "%";
-          rainChance.style.color = "#95b4e3";
+          rainChance.innerHTML = parseInt(round5(el.precipprob)) + "%";
+          rainChance.style.color = "#ffffff";
           hourlyDiv.appendChild(rainChance);
         } else {
           const rainChance = document.createElement("p");
-          rainChance.innerHTML = parseInt(el.precipprob) + "%";
-          rainChance.style.color = "#95b4e3";
+          rainChance.innerHTML = parseInt(round5(el.precipprob)) + "%";
+          rainChance.style.color = "#ffffff";
           hourlyDiv.appendChild(rainChance);
         }
         hourlyDiv.append(hourlyHour);
@@ -173,10 +186,8 @@ async function fetchWeatherData() {
       const dayNum = parseInt(day.datetime.substring(8, 10));
 
       const dailyDiv = document.createElement("div");
-      const dailyTempHigh = document.createElement("p");
-      dailyTempHigh.id = "daily-temp-high";
-      const dailyTempLow = document.createElement("p");
-      dailyTempLow.id = "daily-temp-low";
+      const dailyTemp = document.createElement("p");
+      dailyTemp.id = "daily-temp";
       const dailyIcon = document.createElement("img");
       const monthDay = document.createElement("p");
 
@@ -185,37 +196,54 @@ async function fetchWeatherData() {
       dailyForecastHeader.innerHTML =
         '<i class="fa-regular fa-calendar"></i>' + " 14-day forecast";
       dailyDiv.id = "daily-div";
-      dailyTempHigh.innerHTML = parseInt(day.tempmax) + "&deg;";
-      dailyTempLow.innerHTML = parseInt(day.tempmin) + "&deg;";
+      dailyTemp.innerHTML = parseInt(day.temp) + "&deg;";
       dailyIcon.src = `icons/${day.icon}.svg`;
       monthDay.innerHTML = monthNum + "/" + dayNum;
 
-      dailyDiv.append(dailyTempHigh, dailyTempLow, dailyIcon);
-      if (day.precipprob > 0) {
+      dailyDiv.append(dailyTemp, dailyIcon);
+      if (round5(day.precipprob) > 0) {
         const rainChance = document.createElement("p");
-        rainChance.innerHTML = parseInt(day.precipprob) + "%";
-        rainChance.style.color = "#95b4e3";
+        rainChance.innerHTML = parseInt(round5(day.precipprob)) + "%";
+        rainChance.style.color = "#ffffff";
         dailyDiv.appendChild(rainChance);
       } else {
         const rainChance = document.createElement("p");
-        rainChance.innerHTML = parseInt(day.precipprob) + "%";
-        rainChance.style.color = "#95b4e3";
+        rainChance.innerHTML = parseInt(round5(day.precipprob)) + "%";
+        rainChance.style.color = "#ffffff";
         dailyDiv.appendChild(rainChance);
       }
       dailyDiv.appendChild(monthDay);
       dailyForecastData.appendChild(dailyDiv);
     });
 
+    // Additional Forecast Info
+    additionalInfoHeader.innerHTML =
+      '<i class="fa-solid fa-circle-info"></i> ' + "Additional Information";
+    windSpeed.innerHTML =
+      "Wind Speed: " + Math.round(data.currentConditions.windspeed) + " mph";
+    UVIndex.innerHTML = "UV Index: " + data.currentConditions.uvindex;
+    humidity.innerHTML =
+      "Humidity: " + Math.round(data.currentConditions.humidity) + "%";
+    snowChance.innerHTML =
+      "Chance of snow: " + Math.round(data.currentConditions.snow) + "%";
+    additionalInfoData.append(windSpeed, UVIndex, humidity, snowChance);
+
+    // Footer
     footer.innerHTML =
-      "Weather data up-to-date as of " +
-      data.currentConditions.datetime +
+      "Weather last updated: " +
+      data.currentConditions.datetime.substring(0, 5) +
       " location time.";
+
+    // Clear input value after fetching
     locationInput.value = "";
   } catch (error) {
     console.error("Could not fetch resources:", error);
   }
 }
 
+function round5(chance) {
+  return Math.round(chance / 5) * 5;
+}
 // If user presses the ENTER key, fetch the weather.
 locationInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
@@ -223,3 +251,7 @@ locationInput.addEventListener("keydown", (event) => {
     event.preventDefault();
   }
 });
+
+// Display a weather example for NY.
+locationInput.value = "New York, NY";
+fetchWeatherData();
