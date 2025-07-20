@@ -101,6 +101,10 @@ async function fetchWeatherData() {
           hour -= 12;
           hourlyTemp.innerHTML = parseInt(el.temp) + "&deg;";
           hourlyHour.innerHTML = hour + meridiem;
+        } else if (hour === 0) {
+          hour += 12;
+          hourlyTemp.innerHTML = parseInt(el.temp) + "&deg;";
+          hourlyHour.innerHTML = hour + meridiem;
         } else {
           hourlyTemp.innerHTML = parseInt(el.temp) + "&deg;";
           hourlyHour.innerHTML = hour + meridiem;
