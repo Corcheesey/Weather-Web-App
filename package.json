@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index",
     "dev": "nodemon index",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "predeploy": "npm run start",
+    "deploy": "gh-pages -d start"
   },
   "repository": {
     "type": "git",
