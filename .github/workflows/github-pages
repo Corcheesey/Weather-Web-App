@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  top-secret:
+  pages-build-deployment:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
