@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/Corcheesey/Weather-Web-App/issues"
   },
-  "homepage": "https://github.com/Corcheesey/Weather-Web-App#readme",
+  "homepage": "https://github.com/Corcheesey/weatherapp",
   "dependencies": {
     "apicache": "^1.6.3",
     "cors": "^2.8.5",
