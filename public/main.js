@@ -1,5 +1,4 @@
 const locationInput = document.getElementById("location-input");
-const key = "HY7CDFGCMZD8HYD2K3PGJX8VQ";
 
 // Current Forecast Data Elements
 const currentForecastParent = document.getElementById(
@@ -47,10 +46,9 @@ const footer = document.getElementById("footer-text");
 
 async function fetchWeatherData() {
   try {
-    const response = await fetch(
-      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationInput.value}?key=${key}&iconSet=icons1`
-    );
+    const response = await fetch(`/api/?location=${locationInput.value}`);
     const data = await response.json();
+    console.log(data);
 
     // Clears existing elements
     hourlyForecastData.innerHTML = "";
