@@ -10,24 +10,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Optional: If your site needs Node.js for build steps (e.g., you use a bundler)
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # Optional: Install dependencies if you use a package manager (remove if not needed)
-      # - name: Install dependencies
-      #   run: npm install
+      name: Install dependencies
+      run: npm install
 
-      # Optional: Build step (uncomment/edit if your site needs to be built)
-      # - name: Build Site
-      #   run: npm run build
-      #   env:
-      #     API_KEY_VALUE: ${{ secrets.API_KEY_VALUE }}
-
-      # If your site is just static HTML/CSS/JS, no build step is needed.
-      # By default, GitHub Pages expects static content in the root, or you can specify a folder.
+      name: Build Site
+      run: npm run deploy
+      env:
+        API_KEY_VALUE: ${{ secrets.API_KEY_VALUE }}
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
