@@ -1,0 +1,20 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Site
+        run: |
+          echo "https://corcheesey.github.io/weatherapp/"
+          # Use the secret as an environment variable
+          echo "My secret is $API_KEY_VALUE"
+        env:
+          MY_SECRET_KEY: ${{ secrets.API_KEY_VALUE }}
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
