@@ -10,23 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      name: Install dependencies
-      run: npm install
-
-      name: Build Site
-      run: npm run deploy
-      env:
-        API_KEY_VALUE: ${{ secrets.API_KEY_VALUE }}
+      # No build step needed for plain HTML/CSS/JS in public/
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
-          # Set this to the directory to publish. For plain HTML/CSS/JS, use "." for the root.
           publish_dir: ./public
         env:
           API_KEY_VALUE: ${{ secrets.API_KEY_VALUE }}
